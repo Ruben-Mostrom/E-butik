@@ -56,9 +56,9 @@ let database;
 (() => __awaiter(void 0, void 0, void 0, function* () {
     database = yield sqlite.open({
         driver: sqlite3_1.default.Database,
-        filename: "test.sqlite",
+        filename: 'test.sqlite'
     });
-    yield database.run("PRAGMA foreign_keys = ON");
+    yield database.run('PRAGMA foreign_keys = ON');
     yield database.run(`
     CREATE TABLE IF NOT EXISTS products (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -67,42 +67,42 @@ let database;
       description TEXT
     )
   `);
-    app.get("/", (_request, response) => {
-        response.send("Hello World!");
+    app.get('/', (_request, response) => {
+        response.send('Hello World!');
     });
-    app.get("/products", (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const products = yield database.all("SELECT * FROM products");
+    app.get('/products', (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const products = yield database.all('SELECT * FROM products');
         res.json(products);
     }));
-    app.post("/products", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    app.post('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { name, price, description } = req.body;
         if (!name || !price) {
-            res.status(400).json({ error: "Name and price are required" });
+            res.status(400).json({ error: 'Name and price are required' });
             return;
         }
-        const result = yield database.run("INSERT INTO products (name, price, description) VALUES ( ?, ?, ?)", name, price, description || null);
+        const result = yield database.run('INSERT INTO products (name, price, description) VALUES ( ?, ?, ?)', name, price, description || null);
         res.status(201).json({ id: result.lastID, name, price, description });
         return;
     }));
-    app.delete("/products", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    app.delete('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.body;
         if (!id) {
-            res.status(400).json({ error: "ID is required" });
+            res.status(400).json({ error: 'ID is required' });
             return;
         }
-        yield database.run("DELETE FROM products WHERE id = ?", id);
+        yield database.run('DELETE FROM products WHERE id = ?', id);
         res.status(204).send();
     }));
-    app.put("/products", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    app.put('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id, name, price, description } = req.body;
         if (!id || !name || !price) {
-            res.status(400).json({ error: "ID, name and price are required" });
+            res.status(400).json({ error: 'ID, name and price are required' });
             return;
         }
-        yield database.run("UPDATE products SET name = ?, price = ?, description = ? WHERE id = ?", name, price, description || null, id);
+        yield database.run('UPDATE products SET name = ?, price = ?, description = ? WHERE id = ?', name, price, description || null, id);
         res.status(204).send();
     }));
     app.listen(4000, () => {
-        console.log("Webbtjänsten kan nu ta emot anrop.");
+        console.log('Webbtjänsten kan nu ta emot anrop.');
     });
 }))();
