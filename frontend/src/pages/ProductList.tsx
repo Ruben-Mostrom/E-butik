@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Product } from '../types/Product';
 import { ProductCard } from '../components/ProductCard';
+import { Link } from 'react-router-dom';
 
 export const ProductList = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -17,7 +18,9 @@ export const ProductList = () => {
       <h1>Produkter</h1>
       <div className="product-grid">
         {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+          <Link to={`/product/${product.id}`} key={product.id}>
+            <ProductCard product={product} />
+          </Link>
         ))}
       </div>
     </div>

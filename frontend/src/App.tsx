@@ -1,18 +1,14 @@
-import { useState } from 'react';
 import './App.css';
+import { Routes, Route } from 'react-router-dom';
 import { ProductList } from './pages/ProductList';
+import ProductPage from './pages/ProductPage';
 
 function App() {
-  const [count, setCount] = useState(0);
   return (
-    <>
-      <h1>Hello World</h1>
-      <p>You clicked {count} times</p>
-      <button onClick={() => setCount(count + 1)}>Click me</button>
-      <div className="app">
-        <ProductList />
-      </div>
-    </>
+    <Routes>
+      <Route path="/" element={<ProductList />} />
+      <Route path="/product/:id" element={<ProductPage />} />
+    </Routes>
   );
 }
 
