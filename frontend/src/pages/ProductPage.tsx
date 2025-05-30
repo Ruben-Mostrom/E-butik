@@ -1,16 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-
-type Product = {
-  id: number;
-  name: string;
-  price: number;
-  description: string | null;
-};
+import { useCart } from '../context/useCart';
+import type { Product } from '../types/Product';
 
 export default function ProductPage() {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     fetch(`http://localhost:4000/products`)
@@ -28,6 +24,7 @@ export default function ProductPage() {
       <h1>{product.name}</h1>
       <p>Pris: {product.price} kr</p>
       {product.description && <p>Beskrivning: {product.description}</p>}
+      <button onClick={() => addToCart(product)}>Lägg till i kundvagn</button>
     </div>
   );
 }
