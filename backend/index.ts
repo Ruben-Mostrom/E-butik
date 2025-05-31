@@ -24,8 +24,9 @@ let database: Database;
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       price REAL NOT NULL,
-      description TEXT
-      image_url TEXT
+      description TEXT,
+      image_url TEXT,
+      category TEXT
     )
   `);
 
@@ -39,19 +40,20 @@ let database: Database;
   });
 
   app.post('/products', async (req: Request, res: Response) => {
-    const { name, price, description, image_url } = req.body;
+    const { name, price, description, image_url, category } = req.body;
     if (!name || !price) {
       res.status(400).json({ error: 'Name and price are required' });
       return;
     }
     const result = await database.run(
-      'INSERT INTO products (name, price, description, image_url) VALUES (?, ?, ?, ?)',
+      'INSERT INTO products (name, price, description, image_url, category) VALUES (?, ?, ?, ?, ?)',
       name,
       price,
       description || null,
-      image_url || null
+      image_url || null,
+      category || null
     );
-    res.status(201).json({ id: result.lastID, name, price, description, image_url });
+    res.status(201).json({ id: result.lastID, name, price, description, image_url, category });
   });
 
   app.delete('/products', async (req: Request, res: Response) => {
@@ -65,17 +67,18 @@ let database: Database;
   });
 
   app.put('/products', async (req: Request, res: Response) => {
-    const { id, name, price, description, image_url } = req.body;
+    const { id, name, price, description, image_url, category } = req.body;
     if (!id || !name || !price) {
       res.status(400).json({ error: 'ID, name and price are required' });
       return;
     }
     await database.run(
-      'UPDATE products SET name = ?, price = ?, description = ?, image_url = ? WHERE id = ?',
+      'UPDATE products SET name = ?, price = ?, description = ?, image_url = ?, category = ? WHERE id = ?',
       name,
       price,
       description || null,
       image_url || null,
+      category || null,
       id
     );
     res.status(204).send();

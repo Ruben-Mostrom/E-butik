@@ -22,16 +22,6 @@ export const Navbar = () => {
             </Link>
           </li>
           <li>
-            <Link to="/product/1" onClick={() => setIsOpen(false)}>
-              Exempelprodukt
-            </Link>
-          </li>
-          <li>
-            <Link to="/product/2" onClick={() => setIsOpen(false)}>
-              Exempelprodukt2
-            </Link>
-          </li>
-          <li>
             <Link to="/cart" onClick={() => setIsOpen(false)}>
               🛒 Kundvagn ({cartCount})
             </Link>

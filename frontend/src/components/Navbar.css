@@ -71,6 +71,7 @@
     background: #333;
     width: 100%;
     display: none;
+    gap: 0;
   }
 
   .navbar-links.open {

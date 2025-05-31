@@ -1,4 +1,5 @@
 import { useCart } from '../context/useCart';
+import { Link } from 'react-router-dom';
 
 const CartPage = () => {
   const { cart, removeFromCart, clearCart, increaseQuantity, decreaseQuantity } = useCart();
@@ -29,6 +30,9 @@ const CartPage = () => {
           </ul>
           <p>Totalt: {total} kr</p>
           <button onClick={clearCart}>Töm kundvagn</button>
+          <Link to="/checkout">
+            <button>Gå till kassan</button>
+          </Link>
         </>
       )}
     </div>

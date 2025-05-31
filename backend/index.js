@@ -64,8 +64,9 @@ let database;
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       price REAL NOT NULL,
-      description TEXT
-      image_url TEXT
+      description TEXT,
+      image_url TEXT,
+      category TEXT
     )
   `);
     app.get('/', (_request, response) => {
@@ -76,13 +77,13 @@ let database;
         res.json(products);
     }));
     app.post('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { name, price, description, image_url } = req.body;
+        const { name, price, description, image_url, category } = req.body;
         if (!name || !price) {
             res.status(400).json({ error: 'Name and price are required' });
             return;
         }
-        const result = yield database.run('INSERT INTO products (name, price, description, image_url) VALUES (?, ?, ?, ?)', name, price, description || null, image_url || null);
-        res.status(201).json({ id: result.lastID, name, price, description, image_url });
+        const result = yield database.run('INSERT INTO products (name, price, description, image_url, category) VALUES (?, ?, ?, ?, ?)', name, price, description || null, image_url || null, category || null);
+        res.status(201).json({ id: result.lastID, name, price, description, image_url, category });
     }));
     app.delete('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.body;
@@ -94,12 +95,12 @@ let database;
         res.status(204).send();
     }));
     app.put('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { id, name, price, description, image_url } = req.body;
+        const { id, name, price, description, image_url, category } = req.body;
         if (!id || !name || !price) {
             res.status(400).json({ error: 'ID, name and price are required' });
             return;
         }
-        yield database.run('UPDATE products SET name = ?, price = ?, description = ?, image_url = ? WHERE id = ?', name, price, description || null, image_url || null, id);
+        yield database.run('UPDATE products SET name = ?, price = ?, description = ?, image_url = ?, category = ? WHERE id = ?', name, price, description || null, image_url || null, category || null, id);
         res.status(204).send();
     }));
     app.listen(4000, () => {
