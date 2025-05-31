@@ -25,6 +25,7 @@ let database: Database;
       name TEXT NOT NULL,
       price REAL NOT NULL,
       description TEXT
+      image_url TEXT
     )
   `);
 
@@ -37,20 +38,20 @@ let database: Database;
     res.json(products);
   });
 
-  app.post('/products', async (req: Request, res: Response) /* : Promise<void> */ => {
-    const { name, price, description } = req.body;
+  app.post('/products', async (req: Request, res: Response) => {
+    const { name, price, description, image_url } = req.body;
     if (!name || !price) {
       res.status(400).json({ error: 'Name and price are required' });
       return;
     }
     const result = await database.run(
-      'INSERT INTO products (name, price, description) VALUES ( ?, ?, ?)',
+      'INSERT INTO products (name, price, description, image_url) VALUES (?, ?, ?, ?)',
       name,
       price,
-      description || null
+      description || null,
+      image_url || null
     );
-    res.status(201).json({ id: result.lastID, name, price, description });
-    return;
+    res.status(201).json({ id: result.lastID, name, price, description, image_url });
   });
 
   app.delete('/products', async (req: Request, res: Response) => {
@@ -64,16 +65,17 @@ let database: Database;
   });
 
   app.put('/products', async (req: Request, res: Response) => {
-    const { id, name, price, description } = req.body;
+    const { id, name, price, description, image_url } = req.body;
     if (!id || !name || !price) {
       res.status(400).json({ error: 'ID, name and price are required' });
       return;
     }
     await database.run(
-      'UPDATE products SET name = ?, price = ?, description = ? WHERE id = ?',
+      'UPDATE products SET name = ?, price = ?, description = ?, image_url = ? WHERE id = ?',
       name,
       price,
       description || null,
+      image_url || null,
       id
     );
     res.status(204).send();

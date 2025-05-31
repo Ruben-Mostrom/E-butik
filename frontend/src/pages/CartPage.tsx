@@ -1,7 +1,7 @@
 import { useCart } from '../context/useCart';
 
 const CartPage = () => {
-  const { cart, removeFromCart, clearCart } = useCart();
+  const { cart, removeFromCart, clearCart, increaseQuantity, decreaseQuantity } = useCart();
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
@@ -16,7 +16,14 @@ const CartPage = () => {
             {cart.map((item) => (
               <li key={item.id}>
                 {item.name} – {item.quantity} st – {item.price} kr/st
+                <button onClick={() => decreaseQuantity(item.id)} style={{ margin: '0 5px' }}>
+                  -
+                </button>
+                <button onClick={() => increaseQuantity(item.id)} style={{ margin: '0 5px' }}>
+                  +
+                </button>
                 <button onClick={() => removeFromCart(item.id)}>Ta bort</button>
+                <img src={item.image_url} alt={item.name} style={{ width: '80px', height: 'auto' }} />
               </li>
             ))}
           </ul>

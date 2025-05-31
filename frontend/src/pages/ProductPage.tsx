@@ -22,6 +22,7 @@ export default function ProductPage() {
   return (
     <div>
       <h1>{product.name}</h1>
+      <img src={product.image_url} alt={product.name} width="200" />
       <p>Pris: {product.price} kr</p>
       {product.description && <p>Beskrivning: {product.description}</p>}
       <button onClick={() => addToCart(product)}>Lägg till i kundvagn</button>
