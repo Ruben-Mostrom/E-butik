@@ -1,29 +1,30 @@
 import { useEffect, useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
 import type { Product } from '../types/Product';
-import { Link } from 'react-router-dom';
 import './CategoryPage.css';
 
-export const ProductList = () => {
+const CategoryPage = () => {
+  const { category } = useParams<{ category: string }>();
   const [products, setProducts] = useState<Product[]>([]);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      try {
-        const res = await fetch('http://localhost:4000/products');
-        const data = await res.json();
-        setProducts(data);
-      } catch (err) {
-        console.error('Fel vid hämtning:', err);
-      }
+      const res = await fetch(`http://localhost:4000/products`);
+      const data = await res.json();
+
+      const filtered = data.filter(
+        (product: Product) =>
+          product.category && category && product.category.toLowerCase().trim() === category.toLowerCase().trim()
+      );
+      setProducts(filtered);
     };
 
     fetchProducts();
-  }, []);
+  }, [category]);
 
   return (
     <div>
-      <h1>Välkomen till Fiskekorken!</h1>
-      <img src="banner.jpg" alt="banner" className="banner" />
+      <h1>{category}</h1>
       <ul className="product-list">
         {products.map((product) => (
           <li key={product.id} className="product-item">
@@ -44,3 +45,5 @@ export const ProductList = () => {
     </div>
   );
 };
+
+export default CategoryPage;

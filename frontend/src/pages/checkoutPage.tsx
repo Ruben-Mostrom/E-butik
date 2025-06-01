@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useCart } from '../context/useCart';
+import './CheckoutPage.css';
 
 const CheckoutPage = () => {
   const { cart, clearCart } = useCart();
@@ -19,65 +20,59 @@ const CheckoutPage = () => {
       return;
     }
 
-    // skicka orderdata till backend eller API
-    // För demo gör vi bara en bekräftelse
     setOrderComplete(true);
     clearCart();
   };
 
   if (orderComplete) {
     return (
-      <div>
+      <div className="checkout-container">
         <h2>Tack för din beställning, {name}!</h2>
-        <p>Vi har skickat en bekräftelse till {email}.</p>
+        <p>Vi har skickat en bekräftelse till {email}</p>
       </div>
     );
   }
 
   if (cart.length === 0) {
-    return <p>Din kundvagn är tom. Lägg till produkter innan du går till kassan.</p>;
+    return <p className="checkout-container">Din kundvagn är tom. Lägg till produkter innan du går till kassan.</p>;
   }
 
   return (
-    <div>
-      <h1>Kassa</h1>
+    <div className="checkout-container">
+      <h1 className="checkout-heading">Kassa</h1>
 
-      <h2>Orderöversikt</h2>
-      <ul>
+      <h2 className="section-title">Orderöversikt</h2>
+      <ul className="order-list">
         {cart.map((item) => (
           <li key={item.id}>
             {item.name} - {item.quantity} st - {item.price} kr/st
           </li>
         ))}
       </ul>
-      <p>
+      <p className="order-total">
         <strong>Totalt: {total} kr</strong>
       </p>
 
-      <h2>Dina uppgifter</h2>
-      <form onSubmit={handleSubmit}>
+      <h2 className="section-title">Dina uppgifter</h2>
+      <form onSubmit={handleSubmit} className="checkout-form">
         <label>
           Namn:
-          <br />
           <input type="text" value={name} onChange={(e) => setName(e.target.value)} required />
         </label>
-        <br />
 
         <label>
           E-post:
-          <br />
           <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
         </label>
-        <br />
 
         <label>
           Adress:
-          <br />
-          <textarea value={address} onChange={(e) => setAddress(e.target.value)} required />
+          <input value={address} onChange={(e) => setAddress(e.target.value)} required />
         </label>
-        <br />
 
-        <button type="submit">Slutför köp</button>
+        <button type="submit" className="submit-btn">
+          Slutför köp
+        </button>
       </form>
     </div>
   );

@@ -1,0 +1,28 @@
+.product-list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.product-item {
+  border: 1px solid #ccc;
+  padding: 1rem;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.banner {
+  width: 100%;
+  height: auto;
+  max-height: 400px;
+  object-fit: cover;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 768px) {
+  .product-list {
+    grid-template-columns: 1fr;
+  }
+}

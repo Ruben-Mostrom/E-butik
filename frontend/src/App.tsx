@@ -6,6 +6,7 @@ import { Navbar } from './components/Navbar';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/checkoutPage';
 import AdminPage from './pages/AdminPage';
+import CategoryPage from './pages/CategoryPage';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/cart" element={<CartPage />} />
         <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/:category" element={<CategoryPage />} />
       </Routes>
     </>
   );
