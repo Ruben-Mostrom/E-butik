@@ -69,9 +69,6 @@ let database;
       category TEXT
     )
   `);
-    app.get('/', (_request, response) => {
-        response.send('Hello World!');
-    });
     app.get('/products', (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const products = yield database.all('SELECT * FROM products');
         res.json(products);

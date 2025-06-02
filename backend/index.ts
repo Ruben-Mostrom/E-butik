@@ -30,10 +30,6 @@ let database: Database;
     )
   `);
 
-  app.get('/', (_request, response) => {
-    response.send('Hello World!');
-  });
-
   app.get('/products', async (_req, res) => {
     const products = await database.all('SELECT * FROM products');
     res.json(products);

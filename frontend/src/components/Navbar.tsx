@@ -12,7 +12,7 @@ export const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-left">
         <div className="navbar-logo">
-          <Link to="/">Fiskekroken!</Link>
+          <Link to="/">Fiskekroken</Link>
         </div>
 
         <ul className={`navbar-links ${isOpen ? 'open' : ''}`}>

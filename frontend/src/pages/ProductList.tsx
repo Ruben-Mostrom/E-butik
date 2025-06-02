@@ -22,7 +22,7 @@ export const ProductList = () => {
 
   return (
     <div>
-      <h1>Välkomen till Fiskekorken!</h1>
+      <h1>Välkomen till Fiskekroken!</h1>
       <img src="banner.jpg" alt="banner" className="banner" />
       <ul className="product-list">
         {products.map((product) => (
