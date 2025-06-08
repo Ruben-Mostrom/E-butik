@@ -60,27 +60,69 @@ let database;
     });
     yield database.run('PRAGMA foreign_keys = ON');
     yield database.run(`
+    CREATE TABLE IF NOT EXISTS categories (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      name TEXT NOT NULL
+    )
+  `);
+    yield database.run(`
     CREATE TABLE IF NOT EXISTS products (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       name TEXT NOT NULL,
       price REAL NOT NULL,
       description TEXT,
       image_url TEXT,
-      category TEXT
+      category_id INTEGER,
+    FOREIGN KEY (category_id) REFERENCES categories(id)
     )
   `);
     app.get('/products', (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const products = yield database.all('SELECT * FROM products');
+        const products = yield database.all(`
+    SELECT products.*, categories.name AS category
+    FROM products
+    LEFT JOIN categories ON products.category_id = categories.id
+  `);
         res.json(products);
     }));
+    app.get('/categories', (_req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const categories = yield database.all('SELECT * FROM categories');
+        res.json(categories);
+    }));
+    app.delete('/categories/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { id } = req.params;
+        if (!id) {
+            res.status(400).json({ error: 'ID is required' });
+            return;
+        }
+        const used = yield database.get('SELECT 1 FROM products WHERE category_id = ? LIMIT 1', id);
+        if (used) {
+            res.status(400).json({ error: 'Kategori används av produkter och kan inte tas bort' });
+            return;
+        }
+        const result = yield database.run('DELETE FROM categories WHERE id = ?', id);
+        if (result.changes === 0) {
+            res.status(404).json({ error: 'Kategori hittades inte' });
+            return;
+        }
+        res.status(204).send();
+    }));
+    app.post('/categories', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        const { name } = req.body;
+        if (!name) {
+            res.status(400).json({ error: 'Name is required' });
+            return;
+        }
+        const result = yield database.run('INSERT INTO categories (name) VALUES (?)', name);
+        res.status(201).json({ id: result.lastID, name });
+    }));
     app.post('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { name, price, description, image_url, category } = req.body;
+        const { name, price, description, image_url, category_id } = req.body;
         if (!name || !price) {
             res.status(400).json({ error: 'Name and price are required' });
             return;
         }
-        const result = yield database.run('INSERT INTO products (name, price, description, image_url, category) VALUES (?, ?, ?, ?, ?)', name, price, description || null, image_url || null, category || null);
-        res.status(201).json({ id: result.lastID, name, price, description, image_url, category });
+        const result = yield database.run('INSERT INTO products (name, price, description, image_url, category_id) VALUES (?, ?, ?, ?, ?)', name, price, description || null, image_url || null, category_id || null);
+        res.status(201).json({ id: result.lastID, name, price, description, image_url, category_id });
     }));
     app.delete('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { id } = req.body;
@@ -92,12 +134,12 @@ let database;
         res.status(204).send();
     }));
     app.put('/products', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-        const { id, name, price, description, image_url, category } = req.body;
+        const { id, name, price, description, image_url, category_id } = req.body;
         if (!id || !name || !price) {
             res.status(400).json({ error: 'ID, name and price are required' });
             return;
         }
-        yield database.run('UPDATE products SET name = ?, price = ?, description = ?, image_url = ?, category = ? WHERE id = ?', name, price, description || null, image_url || null, category || null, id);
+        yield database.run('UPDATE products SET name = ?, price = ?, description = ?, image_url = ?, category_id = ? WHERE id = ?', name, price, description || null, image_url || null, category_id || null, id);
         res.status(204).send();
     }));
     app.listen(4000, () => {
